@@ -1,0 +1,316 @@
+﻿@page
+@model StudentManagementSystem.Pages.Admin.StudentsModel
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Students — SMS Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@400;500;600;700&family=Cabinet+Grotesk:wght@300;400;500;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <style>
+        :root {
+            --ink:#0d0f14;--ink2:#1c2030;--surface:#f5f4f0;--white:#ffffff;
+            --accent:#2563eb;--accent2:#0ea5e9;--muted:#64748b;
+            --border:rgba(13,15,20,0.1);--grad:linear-gradient(135deg,#2563eb 0%,#0ea5e9 100%);
+            --font-display:'Clash Display',sans-serif;--font-body:'Cabinet Grotesk',sans-serif;--font-mono:'DM Mono',monospace;
+        }
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+        body{font-family:var(--font-body);background:var(--surface);color:var(--ink);}
+        .sidebar{position:fixed;left:0;top:0;bottom:0;width:240px;background:var(--ink2);display:flex;flex-direction:column;padding:28px 0;z-index:100;}
+        .sb-logo{display:flex;align-items:center;gap:10px;padding:0 24px 28px;border-bottom:1px solid rgba(255,255,255,0.08);}
+        .sb-logo-icon{width:36px;height:36px;border-radius:10px;background:var(--grad);display:grid;place-items:center;color:#fff;font-size:16px;}
+        .sb-logo-text{font-family:var(--font-display);font-size:1.2rem;font-weight:700;color:#fff;}
+        .sb-logo-text span{color:var(--accent2);}
+        .sb-role-badge{margin:16px 24px 0;background:rgba(37,99,235,0.2);border:1px solid rgba(37,99,235,0.3);border-radius:8px;padding:6px 12px;font-size:0.75rem;font-weight:600;color:var(--accent2);font-family:var(--font-mono);text-align:center;}
+        .sb-nav{margin-top:28px;flex:1;}
+        .sb-label{padding:0 24px 8px;font-size:0.65rem;font-weight:600;color:rgba(255,255,255,0.25);text-transform:uppercase;letter-spacing:1.5px;}
+        .sb-link{display:flex;align-items:center;gap:12px;padding:11px 24px;color:rgba(255,255,255,0.55);text-decoration:none;font-size:0.9rem;font-weight:500;transition:all 0.2s;border-left:3px solid transparent;}
+        .sb-link:hover,.sb-link.active{color:#fff;background:rgba(255,255,255,0.06);border-left-color:var(--accent2);}
+        .sb-link i{width:18px;text-align:center;font-size:0.9rem;}
+        .sb-bottom{padding:20px 24px;border-top:1px solid rgba(255,255,255,0.08);}
+        .sb-user{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+        .sb-avatar{width:36px;height:36px;border-radius:50%;background:var(--grad);display:grid;place-items:center;color:#fff;font-family:var(--font-display);font-size:0.9rem;font-weight:700;}
+        .sb-user-name{font-size:0.85rem;font-weight:600;color:#fff;}
+        .sb-user-role{font-size:0.72rem;color:rgba(255,255,255,0.4);}
+        .btn-logout{width:100%;padding:9px;border:1px solid rgba(255,255,255,0.12);border-radius:8px;background:transparent;color:rgba(255,255,255,0.5);font-family:var(--font-body);font-size:0.85rem;font-weight:600;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:center;gap:8px;}
+        .btn-logout:hover{background:rgba(244,63,94,0.15);color:#f43f5e;border-color:rgba(244,63,94,0.3);}
+        .main{margin-left:240px;padding:36px 40px;min-height:100vh;}
+        .page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:32px;}
+        .page-header h1{font-family:var(--font-display);font-size:1.8rem;font-weight:700;}
+        .page-header p{color:var(--muted);margin-top:4px;font-size:0.95rem;}
+        .toolbar{display:flex;gap:12px;margin-bottom:24px;align-items:center;}
+        .search-box{position:relative;flex:1;max-width:400px;}
+        .search-box i{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:0.9rem;}
+        .search-box input{width:100%;padding:11px 14px 11px 40px;border:1.5px solid var(--border);border-radius:10px;font-family:var(--font-body);font-size:0.9rem;background:var(--white);outline:none;transition:border 0.2s;}
+        .search-box input:focus{border-color:var(--accent);}
+        .btn-primary{padding:11px 22px;background:var(--grad);border:none;border-radius:10px;color:#fff;font-family:var(--font-body);font-size:0.9rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:8px;transition:opacity 0.2s;}
+        .btn-primary:hover{opacity:0.9;}
+        .card{background:var(--white);border:1px solid var(--border);border-radius:16px;padding:28px;}
+        table{width:100%;border-collapse:collapse;}
+        th{font-size:0.72rem;color:var(--muted);text-align:left;padding:10px 14px;text-transform:uppercase;letter-spacing:0.5px;border-bottom:1px solid var(--border);}
+        td{font-size:0.875rem;padding:13px 14px;border-bottom:1px solid var(--border);}
+        tr:last-child td{border-bottom:none;}
+        tr:hover td{background:#f8faff;}
+        .pill{display:inline-block;padding:3px 10px;border-radius:100px;font-size:0.72rem;font-weight:600;}
+        .pill.active{background:#dcfce7;color:#16a34a;}
+        .pill.inactive{background:#fee2e2;color:#dc2626;}
+        .action-btns{display:flex;gap:8px;}
+        .btn-edit{padding:5px 12px;border-radius:7px;border:1px solid var(--border);background:var(--surface);font-family:var(--font-body);font-size:0.78rem;font-weight:600;cursor:pointer;color:var(--accent);transition:all 0.2s;}
+        .btn-edit:hover{background:var(--accent);color:#fff;border-color:var(--accent);}
+        .btn-del{padding:5px 12px;border-radius:7px;border:1px solid #fee2e2;background:#fff5f5;font-family:var(--font-body);font-size:0.78rem;font-weight:600;cursor:pointer;color:#dc2626;transition:all 0.2s;}
+        .btn-del:hover{background:#dc2626;color:#fff;}
+        .modal-overlay{display:none;position:fixed;inset:0;background:rgba(13,15,20,0.6);backdrop-filter:blur(6px);z-index:2000;place-items:center;}
+        .modal-overlay.open{display:grid;}
+        .modal{background:var(--white);border-radius:20px;padding:36px;width:90%;max-width:500px;box-shadow:0 40px 100px rgba(0,0,0,0.2);animation:modalIn 0.3s ease;}
+        @@keyframes modalIn{from{transform:translateY(20px) scale(0.97);opacity:0;}to{transform:translateY(0) scale(1);opacity:1;}}
+        .modal h3{font-family:var(--font-display);font-size:1.4rem;font-weight:700;margin-bottom:20px;}
+        .form-group{margin-bottom:16px;}
+        .form-group label{display:block;font-size:0.85rem;font-weight:600;margin-bottom:7px;}
+        .form-group input,.form-group select{width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:10px;font-family:var(--font-body);font-size:0.9rem;background:var(--surface);outline:none;transition:border 0.2s;}
+        .form-group input:focus,.form-group select:focus{border-color:var(--accent);background:var(--white);}
+        .form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+        .modal-btns{display:flex;gap:12px;margin-top:24px;}
+        .btn-save{flex:1;padding:12px;background:var(--grad);border:none;border-radius:10px;color:#fff;font-family:var(--font-body);font-size:0.95rem;font-weight:700;cursor:pointer;}
+        .btn-cancel{flex:1;padding:12px;background:var(--surface);border:1px solid var(--border);border-radius:10px;color:var(--ink);font-family:var(--font-body);font-size:0.95rem;font-weight:600;cursor:pointer;}
+        .toast{position:fixed;bottom:28px;right:28px;padding:14px 22px;border-radius:12px;font-weight:600;font-size:0.9rem;z-index:9999;display:none;animation:slideUp 0.3s ease;}
+        .toast.success{background:#dcfce7;color:#16a34a;border:1px solid #bbf7d0;}
+        .toast.error{background:#fee2e2;color:#dc2626;border:1px solid #fecaca;}
+        @@keyframes slideUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+    </style>
+</head>
+<body>
+    @Html.AntiForgeryToken()
+
+    <aside class="sidebar">
+        <div class="sb-logo">
+            <div class="sb-logo-icon"><i class="fas fa-graduation-cap"></i></div>
+            <div class="sb-logo-text">SM<span>S</span></div>
+        </div>
+        <div class="sb-role-badge"><i class="fas fa-shield-alt"></i> &nbsp;ADMIN</div>
+        <nav class="sb-nav">
+            <div class="sb-label">Main Menu</div>
+            <a href="/Admin/Dashboard" class="sb-link"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+            <a href="/Admin/Students"  class="sb-link active"><i class="fas fa-user-graduate"></i> Students</a>
+            <a href="/Admin/Teachers"  class="sb-link"><i class="fas fa-chalkboard-teacher"></i> Teachers</a>
+            <a href="/Admin/Attendance" class="sb-link"><i class="fas fa-calendar-check"></i> Attendance</a>
+            <a href="/Admin/Marks"     class="sb-link"><i class="fas fa-chart-line"></i> Marks & Results</a>
+        </nav>
+        <div class="sb-bottom">
+            <div class="sb-user">
+                <div class="sb-avatar" id="sb-avatar">AD</div>
+                <div><div class="sb-user-name" id="sb-username">Admin</div><div class="sb-user-role">Administrator</div></div>
+            </div>
+            <button class="btn-logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+        </div>
+    </aside>
+
+    <main class="main">
+        <div class="page-header">
+            <div><h1>Students</h1><p>Manage all student records</p></div>
+            <button class="btn-primary" onclick="openModal('add')"><i class="fas fa-plus"></i> Add Student</button>
+        </div>
+        <div class="toolbar">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchInput" placeholder="Search by name, roll no, course..." oninput="filterTable()" />
+            </div>
+        </div>
+        <div class="card">
+            <table id="studentsTable">
+                <thead>
+                    <tr><th>Roll No.</th><th>Name</th><th>Course</th><th>Email</th><th>Age</th><th>Status</th><th>Actions</th></tr>
+                </thead>
+                <tbody id="tableBody">
+                    @foreach (var s in Model.Students)
+                    {
+                        <tr data-id="@s.Id">
+                            <td>@s.RollNumber</td>
+                            <td>@s.Name</td>
+                            <td>@(s.CourseId == 1 ? "FY MSC-CA" : s.CourseId == 2 ? "SY MSC-CA" : s.CourseId == 3 ? "BCA" : "BSC-IT")</td>
+                            <td>@s.Email</td>
+                            <td>@s.Age</td>
+                            <td><span class="pill active">Active</span></td>
+                            <td>
+                                <div class="action-btns">
+                                    <button class="btn-edit" onclick="openModal('edit',this)">Edit</button>
+                                    <button class="btn-del" onclick="deleteRow(this)">Delete</button>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                    @if (!Model.Students.Any())
+                    {
+                        <tr><td colspan="7" style="text-align:center;color:var(--muted);padding:32px;">No students yet. Add your first student!</td></tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal">
+            <h3 id="modalTitle">Add Student</h3>
+            <div class="form-row">
+                <div class="form-group"><label>First Name</label><input type="text" id="f-fname" placeholder="First name" /></div>
+                <div class="form-group"><label>Last Name</label><input type="text" id="f-lname" placeholder="Last name" /></div>
+            </div>
+            <div class="form-row">
+                <div class="form-group"><label>Roll No.</label><input type="text" id="f-roll" placeholder="Roll number" /></div>
+                <div class="form-group"><label>Age</label><input type="number" id="f-age" placeholder="Age" /></div>
+            </div>
+            <div class="form-group"><label>Email</label><input type="email" id="f-email" placeholder="email@example.com" /></div>
+            <div class="form-group">
+                <label>Course</label>
+                <select id="f-course">
+                    <option value="1">FY MSC-CA</option>
+                    <option value="2">SY MSC-CA</option>
+                    <option value="3">BCA</option>
+                    <option value="4">BSC-IT</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Status</label>
+                <select id="f-status"><option>Active</option><option>Inactive</option></select>
+            </div>
+            <div class="modal-btns">
+                <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+                <button class="btn-save" onclick="saveStudent()">Save Student</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        const role = sessionStorage.getItem('sms_role');
+        const user = sessionStorage.getItem('sms_user');
+        if (!role || !user) window.location.href = '/';
+        if (user) {
+            document.getElementById('sb-username').textContent = user;
+            document.getElementById('sb-avatar').textContent = user.substring(0, 2).toUpperCase();
+        }
+        function logout() { sessionStorage.clear(); window.location.href = '/'; }
+
+        const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+        let editingRow = null;
+
+        function showToast(msg, type = 'success') {
+            const t = document.getElementById('toast');
+            t.textContent = msg;
+            t.className = `toast ${type}`;
+            t.style.display = 'block';
+            setTimeout(() => t.style.display = 'none', 3000);
+        }
+
+        function openModal(mode, btn) {
+            document.getElementById('modalOverlay').classList.add('open');
+            if (mode === 'edit' && btn) {
+                document.getElementById('modalTitle').textContent = 'Edit Student';
+                editingRow = btn.closest('tr');
+                const cells = editingRow.querySelectorAll('td');
+                const nameParts = cells[1].textContent.split(' ');
+                document.getElementById('f-fname').value  = nameParts[0] || '';
+                document.getElementById('f-lname').value  = nameParts.slice(1).join(' ') || '';
+                document.getElementById('f-roll').value   = cells[0].textContent;
+                document.getElementById('f-email').value  = cells[3].textContent;
+                document.getElementById('f-age').value    = cells[4].textContent;
+            } else {
+                document.getElementById('modalTitle').textContent = 'Add Student';
+                editingRow = null;
+                ['f-fname','f-lname','f-roll','f-age','f-email'].forEach(id =>
+                    document.getElementById(id).value = '');
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('modalOverlay').classList.remove('open');
+        }
+
+        async function saveStudent() {
+            const fname  = document.getElementById('f-fname').value.trim();
+            const lname  = document.getElementById('f-lname').value.trim();
+            const roll   = document.getElementById('f-roll').value.trim();
+            const age    = parseInt(document.getElementById('f-age').value) || 0;
+            const email  = document.getElementById('f-email').value.trim();
+            const course = document.getElementById('f-course').value;
+
+            if (!fname || !roll || !email) {
+                showToast('❌ Name, Roll No aur Email required hai!', 'error');
+                return;
+            }
+
+            const isEdit = editingRow !== null;
+            const id = isEdit ? parseInt(editingRow.dataset.id || 0) : 0;
+
+            try {
+                const res = await fetch(`?handler=${isEdit ? 'Edit' : 'Add'}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'RequestVerificationToken': token
+                    },
+                    body: JSON.stringify({
+                        id,
+                        name: fname + ' ' + lname,
+                        email,
+                        rollNumber: roll,
+                        age,
+                        gender: 'Male',
+                        courseId: parseInt(course)
+                    })
+                });
+
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.success) {
+                        showToast(isEdit ? '✅ Student updated!' : '✅ Student DB mein save hua!');
+                        closeModal();
+                        setTimeout(() => location.reload(), 1000);
+                    }
+                } else {
+                    showToast('❌ Server error: ' + res.status, 'error');
+                }
+            } catch (e) {
+                console.error(e);
+                showToast('❌ Network error', 'error');
+            }
+        }
+
+        async function deleteRow(btn) {
+            if (!confirm('Yeh student delete karna chahte ho?')) return;
+            const row = btn.closest('tr');
+            const id  = parseInt(row.dataset.id || 0);
+
+            if (!id) { row.remove(); return; }
+
+            try {
+                const res = await fetch('?handler=Delete', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'RequestVerificationToken': token
+                    },
+                    body: JSON.stringify({ id })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    row.remove();
+                    showToast('🗑️ Student deleted!');
+                } else {
+                    showToast('❌ Delete failed!', 'error');
+                }
+            } catch (e) {
+                showToast('❌ Network error', 'error');
+            }
+        }
+
+        function filterTable() {
+            const q = document.getElementById('searchInput').value.toLowerCase();
+            document.querySelectorAll('#tableBody tr').forEach(tr => {
+                tr.style.display = tr.textContent.toLowerCase().includes(q) ? '' : 'none';
+            });
+        }
+    </script>
+</body>
+</html>

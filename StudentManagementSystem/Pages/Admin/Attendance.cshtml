@@ -1,0 +1,122 @@
+﻿@page
+@model StudentManagementSystem.Pages.Admin.AttendanceModel
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Attendance — SMS Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@400;500;600;700&family=Cabinet+Grotesk:wght@300;400;500;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <style>
+        :root{--ink:#0d0f14;--ink2:#1c2030;--surface:#f5f4f0;--white:#fff;--accent:#2563eb;--accent2:#0ea5e9;--muted:#64748b;--border:rgba(13,15,20,0.1);--grad:linear-gradient(135deg,#2563eb,#0ea5e9);--font-display:'Clash Display',sans-serif;--font-body:'Cabinet Grotesk',sans-serif;--font-mono:'DM Mono',monospace;}
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+        body{font-family:var(--font-body);background:var(--surface);color:var(--ink);}
+        .sidebar{position:fixed;left:0;top:0;bottom:0;width:240px;background:var(--ink2);display:flex;flex-direction:column;padding:28px 0;z-index:100;}
+        .sb-logo{display:flex;align-items:center;gap:10px;padding:0 24px 28px;border-bottom:1px solid rgba(255,255,255,0.08);}
+        .sb-logo-icon{width:36px;height:36px;border-radius:10px;background:var(--grad);display:grid;place-items:center;color:#fff;font-size:16px;}
+        .sb-logo-text{font-family:var(--font-display);font-size:1.2rem;font-weight:700;color:#fff;} .sb-logo-text span{color:var(--accent2);}
+        .sb-role-badge{margin:16px 24px 0;background:rgba(37,99,235,0.2);border:1px solid rgba(37,99,235,0.3);border-radius:8px;padding:6px 12px;font-size:0.75rem;font-weight:600;color:var(--accent2);font-family:var(--font-mono);text-align:center;}
+        .sb-nav{margin-top:28px;flex:1;} .sb-label{padding:0 24px 8px;font-size:0.65rem;font-weight:600;color:rgba(255,255,255,0.25);text-transform:uppercase;letter-spacing:1.5px;}
+        .sb-link{display:flex;align-items:center;gap:12px;padding:11px 24px;color:rgba(255,255,255,0.55);text-decoration:none;font-size:0.9rem;font-weight:500;transition:all 0.2s;border-left:3px solid transparent;}
+        .sb-link:hover,.sb-link.active{color:#fff;background:rgba(255,255,255,0.06);border-left-color:var(--accent2);} .sb-link i{width:18px;text-align:center;}
+        .sb-bottom{padding:20px 24px;border-top:1px solid rgba(255,255,255,0.08);}
+        .sb-user{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+        .sb-avatar{width:36px;height:36px;border-radius:50%;background:var(--grad);display:grid;place-items:center;color:#fff;font-family:var(--font-display);font-size:0.9rem;font-weight:700;}
+        .sb-user-name{font-size:0.85rem;font-weight:600;color:#fff;} .sb-user-role{font-size:0.72rem;color:rgba(255,255,255,0.4);}
+        .btn-logout{width:100%;padding:9px;border:1px solid rgba(255,255,255,0.12);border-radius:8px;background:transparent;color:rgba(255,255,255,0.5);font-family:var(--font-body);font-size:0.85rem;font-weight:600;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:center;gap:8px;}
+        .btn-logout:hover{background:rgba(244,63,94,0.15);color:#f43f5e;border-color:rgba(244,63,94,0.3);}
+        .main{margin-left:240px;padding:36px 40px;min-height:100vh;}
+        .page-header{margin-bottom:32px;} .page-header h1{font-family:var(--font-display);font-size:1.8rem;font-weight:700;} .page-header p{color:var(--muted);margin-top:4px;}
+        .filters{display:flex;gap:14px;margin-bottom:24px;flex-wrap:wrap;}
+        .filter-group label{display:block;font-size:0.8rem;font-weight:600;margin-bottom:6px;color:var(--muted);}
+        .filter-group select,.filter-group input[type=date]{padding:10px 14px;border:1.5px solid var(--border);border-radius:10px;font-family:var(--font-body);font-size:0.9rem;background:var(--white);outline:none;transition:border 0.2s;}
+        .filter-group select:focus,.filter-group input:focus{border-color:var(--accent);}
+        .card{background:var(--white);border:1px solid var(--border);border-radius:16px;padding:28px;margin-bottom:24px;}
+        .card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
+        .card-title{font-family:var(--font-display);font-size:1.1rem;font-weight:600;}
+        table{width:100%;border-collapse:collapse;}
+        th{font-size:0.72rem;color:var(--muted);text-align:left;padding:10px 14px;text-transform:uppercase;letter-spacing:0.5px;border-bottom:1px solid var(--border);}
+        td{font-size:0.875rem;padding:13px 14px;border-bottom:1px solid var(--border);}
+        tr:last-child td{border-bottom:none;} tr:hover td{background:#f8faff;}
+        .pill{display:inline-block;padding:3px 10px;border-radius:100px;font-size:0.72rem;font-weight:600;}
+        .pill.present{background:#dcfce7;color:#16a34a;} .pill.absent{background:#fee2e2;color:#dc2626;}
+        .stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px;}
+        .stat-mini{background:var(--white);border:1px solid var(--border);border-radius:14px;padding:20px;text-align:center;}
+        .stat-mini-val{font-family:var(--font-display);font-size:1.6rem;font-weight:700;}
+        .stat-mini-lbl{font-size:0.8rem;color:var(--muted);margin-top:4px;}
+        .stat-mini.green .stat-mini-val{color:#16a34a;} .stat-mini.red .stat-mini-val{color:#dc2626;} .stat-mini.blue .stat-mini-val{color:#2563eb;}
+    </style>
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="sb-logo"><div class="sb-logo-icon"><i class="fas fa-graduation-cap"></i></div><div class="sb-logo-text">SM<span>S</span></div></div>
+        <div class="sb-role-badge"><i class="fas fa-shield-alt"></i> &nbsp;ADMIN</div>
+        <nav class="sb-nav">
+            <div class="sb-label">Main Menu</div>
+            <a href="/Admin/Dashboard" class="sb-link"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+            <a href="/Admin/Students" class="sb-link"><i class="fas fa-user-graduate"></i> Students</a>
+            <a href="/Admin/Teachers" class="sb-link"><i class="fas fa-chalkboard-teacher"></i> Teachers</a>
+            <a href="/Admin/Attendance" class="sb-link active"><i class="fas fa-calendar-check"></i> Attendance</a>
+            <a href="/Admin/Marks" class="sb-link"><i class="fas fa-chart-line"></i> Marks & Results</a>
+        </nav>
+        <div class="sb-bottom">
+            <div class="sb-user"><div class="sb-avatar" id="sb-avatar">AD</div><div><div class="sb-user-name" id="sb-username">Admin</div><div class="sb-user-role">Administrator</div></div></div>
+            <button class="btn-logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+        </div>
+    </aside>
+    <main class="main">
+        <div class="page-header"><h1>Attendance</h1><p>View and manage student attendance records</p></div>
+        <div class="stats-row">
+            <div class="stat-mini green"><div class="stat-mini-val">187</div><div class="stat-mini-lbl">Present Today</div></div>
+            <div class="stat-mini red"><div class="stat-mini-val">61</div><div class="stat-mini-lbl">Absent Today</div></div>
+            <div class="stat-mini blue"><div class="stat-mini-val">92%</div><div class="stat-mini-lbl">Overall Rate</div></div>
+        </div>
+        <div class="filters">
+            <div class="filter-group"><label>Date</label><input type="date" id="f-date" /></div>
+            <div class="filter-group"><label>Course</label>
+                <select id="f-course" onchange="filterTable()">
+                    <option value="">All Courses</option><option>FY MSC-CA</option><option>BCA</option><option>BSC-IT</option>
+                </select>
+            </div>
+            <div class="filter-group"><label>Status</label>
+                <select id="f-status" onchange="filterTable()">
+                    <option value="">All</option><option>Present</option><option>Absent</option>
+                </select>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header"><span class="card-title">Attendance Records</span></div>
+            <table>
+                <thead><tr><th>Roll No.</th><th>Student Name</th><th>Course</th><th>Date</th><th>Status</th></tr></thead>
+                <tbody id="tableBody">
+                    <tr><td>27</td><td>Pavan Salunke</td><td>FY MSC-CA</td><td>19 Mar 2026</td><td><span class="pill present">Present</span></td></tr>
+                    <tr><td>10</td><td>Chandrakant Bidve</td><td>FY MSC-CA</td><td>19 Mar 2026</td><td><span class="pill present">Present</span></td></tr>
+                    <tr><td>05</td><td>Anjali Sharma</td><td>BCA</td><td>19 Mar 2026</td><td><span class="pill absent">Absent</span></td></tr>
+                    <tr><td>18</td><td>Rohit Patil</td><td>BSC-IT</td><td>19 Mar 2026</td><td><span class="pill present">Present</span></td></tr>
+                    <tr><td>22</td><td>Priya Desai</td><td>BCA</td><td>19 Mar 2026</td><td><span class="pill present">Present</span></td></tr>
+                    <tr><td>27</td><td>Pavan Salunke</td><td>FY MSC-CA</td><td>18 Mar 2026</td><td><span class="pill present">Present</span></td></tr>
+                    <tr><td>10</td><td>Chandrakant Bidve</td><td>FY MSC-CA</td><td>18 Mar 2026</td><td><span class="pill absent">Absent</span></td></tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+    <script>
+        const role = sessionStorage.getItem('sms_role'); const user = sessionStorage.getItem('sms_user');
+        if (!role || !user) window.location.href = '/';
+        if (user) { document.getElementById('sb-username').textContent = user; document.getElementById('sb-avatar').textContent = user.substring(0,2).toUpperCase(); }
+        document.getElementById('f-date').valueAsDate = new Date();
+        function logout() { sessionStorage.clear(); window.location.href = '/'; }
+        function filterTable() {
+            const course = document.getElementById('f-course').value.toLowerCase();
+            const status = document.getElementById('f-status').value.toLowerCase();
+            document.querySelectorAll('#tableBody tr').forEach(tr => {
+                const tCourse = tr.cells[2].textContent.toLowerCase();
+                const tStatus = tr.cells[4].textContent.toLowerCase().trim();
+                const matchCourse = !course || tCourse.includes(course);
+                const matchStatus = !status || tStatus.includes(status);
+                tr.style.display = matchCourse && matchStatus ? '' : 'none';
+            });
+        }
+    </script>
+</body>
+</html>

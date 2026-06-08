@@ -1,0 +1,184 @@
+﻿@page
+@model StudentManagementSystem.Pages.Teacher.AttendanceModel
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Attendance — SMS Teacher</title>
+    <link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@400;500;600;700&family=Cabinet+Grotesk:wght@300;400;500;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <style>
+        :root{--ink:#0d0f14;--ink2:#1c2030;--surface:#f5f4f0;--white:#fff;--accent:#0d9488;--accent2:#14b8a6;--muted:#64748b;--border:rgba(13,15,20,0.1);--grad:linear-gradient(135deg,#0d9488,#14b8a6);--font-display:'Clash Display',sans-serif;--font-body:'Cabinet Grotesk',sans-serif;--font-mono:'DM Mono',monospace;}
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+        body{font-family:var(--font-body);background:var(--surface);color:var(--ink);}
+        .sidebar{position:fixed;left:0;top:0;bottom:0;width:240px;background:var(--ink2);display:flex;flex-direction:column;padding:28px 0;z-index:100;}
+        .sb-logo{display:flex;align-items:center;gap:10px;padding:0 24px 28px;border-bottom:1px solid rgba(255,255,255,0.08);}
+        .sb-logo-icon{width:36px;height:36px;border-radius:10px;background:var(--grad);display:grid;place-items:center;color:#fff;font-size:16px;}
+        .sb-logo-text{font-family:var(--font-display);font-size:1.2rem;font-weight:700;color:#fff;} .sb-logo-text span{color:var(--accent2);}
+        .sb-role-badge{margin:16px 24px 0;background:rgba(13,148,136,0.2);border:1px solid rgba(13,148,136,0.3);border-radius:8px;padding:6px 12px;font-size:0.75rem;font-weight:600;color:var(--accent2);font-family:var(--font-mono);text-align:center;}
+        .sb-nav{margin-top:28px;flex:1;} .sb-label{padding:0 24px 8px;font-size:0.65rem;font-weight:600;color:rgba(255,255,255,0.25);text-transform:uppercase;letter-spacing:1.5px;}
+        .sb-link{display:flex;align-items:center;gap:12px;padding:11px 24px;color:rgba(255,255,255,0.55);text-decoration:none;font-size:0.9rem;font-weight:500;transition:all 0.2s;border-left:3px solid transparent;}
+        .sb-link:hover,.sb-link.active{color:#fff;background:rgba(255,255,255,0.06);border-left-color:var(--accent2);} .sb-link i{width:18px;text-align:center;}
+        .sb-bottom{padding:20px 24px;border-top:1px solid rgba(255,255,255,0.08);}
+        .sb-user{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+        .sb-avatar{width:36px;height:36px;border-radius:50%;background:var(--grad);display:grid;place-items:center;color:#fff;font-family:var(--font-display);font-size:0.9rem;font-weight:700;}
+        .sb-user-name{font-size:0.85rem;font-weight:600;color:#fff;} .sb-user-role{font-size:0.72rem;color:rgba(255,255,255,0.4);}
+        .btn-logout{width:100%;padding:9px;border:1px solid rgba(255,255,255,0.12);border-radius:8px;background:transparent;color:rgba(255,255,255,0.5);font-family:var(--font-body);font-size:0.85rem;font-weight:600;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:center;gap:8px;}
+        .btn-logout:hover{background:rgba(244,63,94,0.15);color:#f43f5e;border-color:rgba(244,63,94,0.3);}
+        .main{margin-left:240px;padding:36px 40px;min-height:100vh;}
+        .page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:32px;}
+        .page-header h1{font-family:var(--font-display);font-size:1.8rem;font-weight:700;} .page-header p{color:var(--muted);margin-top:4px;}
+        .filters{display:flex;gap:14px;margin-bottom:24px;}
+        .filter-group label{display:block;font-size:0.8rem;font-weight:600;margin-bottom:6px;color:var(--muted);}
+        .filter-group input[type=date],.filter-group select{padding:10px 14px;border:1.5px solid var(--border);border-radius:10px;font-family:var(--font-body);font-size:0.9rem;background:var(--white);outline:none;}
+        .card{background:var(--white);border:1px solid var(--border);border-radius:16px;padding:28px;margin-bottom:24px;}
+        .card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
+        .card-title{font-family:var(--font-display);font-size:1.1rem;font-weight:600;}
+        table{width:100%;border-collapse:collapse;}
+        th{font-size:0.72rem;color:var(--muted);text-align:left;padding:10px 14px;text-transform:uppercase;letter-spacing:0.5px;border-bottom:1px solid var(--border);}
+        td{font-size:0.875rem;padding:13px 14px;border-bottom:1px solid var(--border);}
+        tr:last-child td{border-bottom:none;} tr:hover td{background:#f0fdfa;}
+        .toggle-wrap{display:flex;gap:8px;}
+        .toggle-btn{padding:6px 16px;border-radius:8px;border:none;font-family:var(--font-body);font-size:0.8rem;font-weight:700;cursor:pointer;transition:all 0.2s;}
+        .toggle-btn.present{background:#dcfce7;color:#16a34a;} .toggle-btn.present.active-btn{background:#16a34a;color:#fff;}
+        .toggle-btn.absent{background:#fee2e2;color:#dc2626;} .toggle-btn.absent.active-btn{background:#dc2626;color:#fff;}
+        .btn-save-all{padding:11px 28px;background:var(--grad);border:none;border-radius:10px;color:#fff;font-family:var(--font-body);font-size:0.9rem;font-weight:700;cursor:pointer;}
+    </style>
+</head>
+<body>
+  @Html.AntiForgeryToken()
+    <aside class="sidebar">
+        <div class="sb-logo"><div class="sb-logo-icon"><i class="fas fa-graduation-cap"></i></div><div class="sb-logo-text">SM<span>S</span></div></div>
+        <div class="sb-role-badge"><i class="fas fa-chalkboard-teacher"></i> &nbsp;TEACHER</div>
+        <nav class="sb-nav">
+            <div class="sb-label">Menu</div>
+            <a href="/Teacher/Dashboard" class="sb-link"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+            <a href="/Teacher/Students" class="sb-link"><i class="fas fa-user-graduate"></i> My Students</a>
+            <a href="/Teacher/Attendance" class="sb-link active"><i class="fas fa-calendar-check"></i> Attendance</a>
+            <a href="/Teacher/Marks" class="sb-link"><i class="fas fa-chart-line"></i> Marks</a>
+            <a href="/Teacher/Profile" class="sb-link"><i class="fas fa-user"></i> My Profile</a>
+        </nav>
+        <div class="sb-bottom">
+            <div class="sb-user"><div class="sb-avatar" id="sb-avatar">TC</div><div><div class="sb-user-name" id="sb-username">Teacher</div><div class="sb-user-role">Faculty</div></div></div>
+            <button class="btn-logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+        </div>
+    </aside>
+    <main class="main">
+        <div class="page-header"><div><h1>Mark Attendance</h1><p>Mark and manage daily student attendance</p></div></div>
+        <div class="filters">
+            <div class="filter-group"><label>Date</label><input type="date" id="f-date" /></div>
+            <div class="filter-group"><label>Course</label>
+                <select id="f-course"><option>FY MSC-CA</option><option>BCA</option><option>BSC-IT</option></select>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header">
+                <span class="card-title">Students — <span id="courseLabel">FY MSC-CA</span></span>
+                <button type="button" class="btn-save-all" onclick="saveAll()"><i class="fas fa-save"></i> Save Attendance</button>
+            </div>
+            <table>
+                <thead>
+                    <tr><th>Roll No.</th><th>Name</th><th>Attendance</th></tr>
+                </thead>
+                <tbody>
+                    <!-- ✅ data-student-id = DB Id | Roll No. sirf display -->
+                    <tr data-student-id="1">
+                        <td>27</td><td>Pavan Salunke</td>
+                        <td><div class="toggle-wrap">
+                            <button type="button" class="toggle-btn present active-btn" onclick="mark(this)">Present</button>
+                            <button type="button" class="toggle-btn absent" onclick="mark(this)">Absent</button>
+                        </div></td>
+                    </tr>
+                    <tr data-student-id="2">
+                        <td>10</td><td>Chandrakant Bidve</td>
+                        <td><div class="toggle-wrap">
+                            <button type="button" class="toggle-btn present active-btn" onclick="mark(this)">Present</button>
+                            <button type="button" class="toggle-btn absent" onclick="mark(this)">Absent</button>
+                        </div></td>
+                    </tr>
+                    <tr data-student-id="3">
+                        <td>05</td><td>Anjali</td>
+                        <td><div class="toggle-wrap">
+                            <button type="button" class="toggle-btn present" onclick="mark(this)">Present</button>
+                            <button type="button" class="toggle-btn absent active-btn" onclick="mark(this)">Absent</button>
+                        </div></td>
+                    </tr>
+                    <tr data-student-id="4">
+                        <td>18</td><td>Rohit Patil</td>
+                        <td><div class="toggle-wrap">
+                            <button type="button" class="toggle-btn present active-btn" onclick="mark(this)">Present</button>
+                            <button type="button" class="toggle-btn absent" onclick="mark(this)">Absent</button>
+                        </div></td>
+                    </tr>
+                    <tr data-student-id="5">
+                        <td>22</td><td>Priya Desai</td>
+                        <td><div class="toggle-wrap">
+                            <button type="button" class="toggle-btn present active-btn" onclick="mark(this)">Present</button>
+                            <button type="button" class="toggle-btn absent" onclick="mark(this)">Absent</button>
+                        </div></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+<script>
+    const role = sessionStorage.getItem('sms_role');
+    const user = sessionStorage.getItem('sms_user');
+    if (!role || !user) window.location.href = '/';
+    if (user) {
+        document.getElementById('sb-username').textContent = user;
+        document.getElementById('sb-avatar').textContent = user.substring(0,2).toUpperCase();
+    }
+
+    function logout() {
+        sessionStorage.clear();
+        window.location.href = '/';
+    }
+
+    function mark(btn) {
+        const wrap = btn.closest('.toggle-wrap');
+        wrap.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active-btn'));
+        btn.classList.add('active-btn');
+    }
+
+    async function saveAll() {
+        const date = document.getElementById('f-date').value;
+        if (!date) { alert("Date select karo!"); return; }
+
+        const course = document.getElementById('f-course').value;
+        const rows = document.querySelectorAll("tbody tr");
+        const records = [];
+
+        rows.forEach(row => {
+            const studentId = parseInt(row.getAttribute('data-student-id')); // ✅ DB Id
+            const studentName = row.cells[1].innerText;
+            const activeBtn = row.querySelector('.active-btn');
+            const status = activeBtn ? activeBtn.innerText.trim() : "Present";
+            records.push({ studentId, studentName, status });
+        });
+
+        const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+
+        try {
+            const res = await fetch(window.location.pathname + "?handler=SaveAttendance", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "RequestVerificationToken": token
+                },
+                body: JSON.stringify({ date, course, records })
+            });
+            const data = await res.json();
+            if (data.success) {
+                alert("✅ Attendance Saved Successfully!");
+            } else {
+                alert("❌ Error: " + data.message);
+            }
+        } catch (e) {
+            console.error(e);
+            alert("❌ Server error");
+        }
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,466 @@
+﻿@page
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SMS — Student Management System | Indira University</title>
+    <link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@400;500;600;700&family=Cabinet+Grotesk:wght@300;400;500;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+
+
+        <!-- ✅ REQUIRED: AntiForgery Token (VERY IMPORTANT) -->
+        <form method="post" id="antiForgeryForm">
+            @Html.AntiForgeryToken()
+        </form>
+
+    <!-- ══════════════ HEADER ══════════════ -->
+    <header id="site-header">
+        <a class="logo" href="#home">
+            <div class="logo-icon"><i class="fas fa-graduation-cap"></i></div>
+            <div class="logo-text">SM<span>S</span></div>
+        </a>
+        <nav id="main-nav">
+            <a href="#home" class="nav-link active">Home</a>
+            <a href="#about" class="nav-link">About Us</a>
+            <a href="#features" class="nav-link">Features</a>
+            <a href="#contact" class="nav-link">Contact</a>
+        </nav>
+        <div class="header-cta">
+            <a class="btn-login" href="#" id="header-login-btn"><i class="fas fa-sign-in-alt"></i> Login</a>
+        </div>
+        <button class="hamburger" id="hamburger"><i class="fas fa-bars"></i></button>
+    </header>
+
+    <!-- Mobile Nav -->
+    <div class="mobile-nav" id="mobile-nav">
+        <a href="#home" class="mob-link">Home</a>
+        <a href="#about" class="mob-link">About Us</a>
+        <a href="#features" class="mob-link">Features</a>
+        <a href="#contact" class="mob-link">Contact</a>
+        <div class="mob-btns">
+            <a class="btn-login" href="#" id="mob-login-btn"><i class="fas fa-sign-in-alt"></i> Login</a>
+        </div>
+    </div>
+
+
+    <!-- ══════════════ HOME (HERO) ══════════════ -->
+    <section id="home">
+        <div class="hero-bg">
+            <div class="hero-blob blob1"></div>
+            <div class="hero-blob blob2"></div>
+            <div class="hero-blob blob3"></div>
+        </div>
+        <div class="hero-content">
+            <div class="hero-tag"><i class="fas fa-university"></i> Indira University — School of IT</div>
+            <h1 class="hero-title">Student<br /><span>Management</span><br />System</h1>
+            <p class="hero-desc">A centralized web-based platform to manage student records, attendance, marks, and academic performance — built for admins, teachers, and students.</p>
+            <div class="hero-btns">
+                <a class="btn-hero primary" href="#" id="hero-launch-btn"><i class="fas fa-rocket"></i> &nbsp;Launch Dashboard</a>
+                <a class="btn-hero outline" href="#about"><i class="fas fa-book-open"></i> &nbsp;Learn More</a>
+            </div>
+        </div>
+        <div class="hero-visual">
+            <svg viewBox="0 0 500 420" xmlns="http://www.w3.org/2000/svg" class="hero-illustration">
+                <!-- Background blob -->
+                <circle cx="280" cy="210" r="180" fill="#dbeafe" opacity="0.5" />
+                <!-- Laptop base -->
+                <rect x="100" y="275" width="300" height="14" rx="7" fill="#1e3a8a" />
+                <!-- Laptop body -->
+                <rect x="130" y="130" width="240" height="152" rx="12" fill="#1c2030" />
+                <!-- Screen -->
+                <rect x="142" y="142" width="216" height="128" rx="6" fill="#f0f9ff" />
+                <!-- Header bar -->
+                <rect x="142" y="142" width="216" height="22" rx="6" fill="#2563eb" />
+                <circle cx="155" cy="153" r="4" fill="#f87171" />
+                <circle cx="168" cy="153" r="4" fill="#fbbf24" />
+                <circle cx="181" cy="153" r="4" fill="#34d399" />
+                <rect x="196" y="148" width="80" height="10" rx="3" fill="rgba(255,255,255,0.3)" />
+                <!-- Stat cards -->
+                <rect x="150" y="172" width="92" height="44" rx="6" fill="white" />
+                <rect x="254" y="172" width="92" height="44" rx="6" fill="white" />
+                <rect x="150" y="222" width="92" height="38" rx="6" fill="white" />
+                <rect x="254" y="222" width="92" height="38" rx="6" fill="white" />
+                <!-- Card 1 content -->
+                <rect x="158" y="178" width="12" height="12" rx="3" fill="#dbeafe" />
+                <rect x="174" y="179" width="30" height="6" rx="2" fill="#0d0f14" opacity="0.8" />
+                <rect x="174" y="188" width="20" height="4" rx="2" fill="#64748b" opacity="0.6" />
+                <rect x="158" y="196" width="50" height="5" rx="2" fill="#2563eb" opacity="0.3" />
+                <rect x="158" y="204" width="38" height="5" rx="2" fill="#e2e8f0" />
+                <!-- Card 2 content -->
+                <rect x="262" y="178" width="12" height="12" rx="3" fill="#ccfbf1" />
+                <rect x="278" y="179" width="30" height="6" rx="2" fill="#0d0f14" opacity="0.8" />
+                <rect x="278" y="188" width="20" height="4" rx="2" fill="#64748b" opacity="0.6" />
+                <rect x="262" y="196" width="50" height="5" rx="2" fill="#0d9488" opacity="0.3" />
+                <rect x="262" y="204" width="38" height="5" rx="2" fill="#e2e8f0" />
+                <!-- Card 3 content -->
+                <rect x="158" y="228" width="12" height="12" rx="3" fill="#fef3c7" />
+                <rect x="174" y="229" width="25" height="5" rx="2" fill="#0d0f14" opacity="0.8" />
+                <rect x="158" y="245" width="70" height="4" rx="2" fill="#e2e8f0" />
+                <!-- Card 4 content -->
+                <rect x="262" y="228" width="12" height="12" rx="3" fill="#ffe4e6" />
+                <rect x="278" y="229" width="25" height="5" rx="2" fill="#0d0f14" opacity="0.8" />
+                <rect x="262" y="245" width="70" height="4" rx="2" fill="#e2e8f0" />
+                <!-- Person 1 (left) -->
+                <circle cx="88" cy="200" r="20" fill="#fbbf24" />
+                <ellipse cx="88" cy="240" rx="18" ry="10" fill="#2563eb" />
+                <rect x="75" y="232" width="13" height="40" rx="6" fill="#2563eb" />
+                <rect x="88" y="232" width="13" height="40" rx="6" fill="#2563eb" />
+                <rect x="76" y="272" width="11" height="25" rx="5" fill="#1e3a8a" />
+                <rect x="89" y="272" width="11" height="25" rx="5" fill="#1e3a8a" />
+                <!-- Arm pointing -->
+                <rect x="100" y="225" width="32" height="10" rx="5" fill="#2563eb" transform="rotate(-20 100 225)" />
+                <!-- Person 2 (right) -->
+                <circle cx="412" cy="205" r="20" fill="#f9a8d4" />
+                <ellipse cx="412" cy="245" rx="18" ry="10" fill="#7c3aed" />
+                <rect x="399" y="237" width="13" height="40" rx="6" fill="#7c3aed" />
+                <rect x="412" y="237" width="13" height="40" rx="6" fill="#7c3aed" />
+                <rect x="400" y="277" width="11" height="25" rx="5" fill="#5b21b6" />
+                <rect x="413" y="277" width="11" height="25" rx="5" fill="#5b21b6" />
+                <!-- Floating card top-left -->
+                <rect x="48" y="95" width="72" height="48" rx="10" fill="white" opacity="0.95" style="filter:drop-shadow(0 4px 12px rgba(0,0,0,0.1))" />
+                <rect x="56" y="103" width="20" height="5" rx="2" fill="#2563eb" opacity="0.6" />
+                <rect x="56" y="112" width="40" height="8" rx="2" fill="#0d0f14" opacity="0.8" />
+                <rect x="56" y="124" width="30" height="4" rx="2" fill="#64748b" opacity="0.5" />
+                <!-- Floating card top-right -->
+                <rect x="380" y="95" width="72" height="48" rx="10" fill="white" opacity="0.95" style="filter:drop-shadow(0 4px 12px rgba(0,0,0,0.1))" />
+                <rect x="388" y="103" width="20" height="5" rx="2" fill="#16a34a" opacity="0.6" />
+                <rect x="388" y="112" width="40" height="8" rx="2" fill="#0d0f14" opacity="0.8" />
+                <rect x="388" y="124" width="30" height="4" rx="2" fill="#64748b" opacity="0.5" />
+                <!-- Decorative dots -->
+                <circle cx="360" cy="75" r="9" fill="#2563eb" opacity="0.25" />
+                <circle cx="378" cy="60" r="5" fill="#0ea5e9" opacity="0.35" />
+                <circle cx="145" cy="68" r="7" fill="#7c3aed" opacity="0.25" />
+                <circle cx="125" cy="82" r="4" fill="#2563eb" opacity="0.2" />
+                <circle cx="420" cy="160" r="5" fill="#f59e0b" opacity="0.3" />
+                <circle cx="75" cy="160" r="5" fill="#34d399" opacity="0.3" />
+            </svg>
+        </div>
+    </section>
+
+
+    <!-- ══════════════ ABOUT US ══════════════ -->
+    <section id="about">
+        <div class="about-img-wrap reveal">
+            <span class="section-tag" style="margin-bottom:14px;display:inline-block;"><i class="fas fa-university"></i> About Us</span>
+            <div class="about-who-header">
+                <h3><i class="fas fa-users"></i> Who We Are?</h3>
+            </div>
+            <div class="about-who-text">
+                <p>We are final year MCA students from <strong>Indira University, Pune</strong> — passionate about building real-world web applications that solve everyday problems in education.</p>
+                <p>This <strong>Student Management System (SMS)</strong> was built as our academic project with a vision to digitize the entire student record process — from enrollment to results.</p>
+                <p>Our system supports <strong>three roles</strong> — Admin, Teacher, and Student — each with their own dashboard and permissions, making academic management faster, smarter, and paperless.</p>
+                <p>We believe technology should empower education. With this platform, institutions can manage <strong>attendance, marks, and student data</strong> in real time — no more spreadsheets, no more paperwork.</p>
+                <p>Built with <strong>HTML, CSS, JavaScript, ASP.NET Web API</strong> and <strong>SQL Server</strong> — this is our contribution to modern education management.</p>
+                <p class="about-thank">Thank You. 🙏</p>
+            </div>
+        </div>
+
+        <div class="about-photo-col reveal">
+            <div class="about-photo-row">
+                <div class="about-photo-card">
+                    <div class="about-photo-placeholder">
+                        <i class="fas fa-user-graduate"></i>
+                    </div>
+                    <div class="about-photo-info">
+                        <div class="about-photo-name">Pavan Salunke</div>
+                        <div class="about-photo-role">Founder &amp; Developer</div>
+                    </div>
+                </div>
+                <div class="about-photo-card">
+                    <div class="about-photo-placeholder">
+                        <i class="fas fa-user-graduate"></i>
+                    </div>
+                    <div class="about-photo-info">
+                        <div class="about-photo-name">Chandrakant Bidve</div>
+                        <div class="about-photo-role">Co-Founder &amp; Developer</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ══════════════ FEATURES ══════════════ -->
+    <section id="features">
+        <div class="section-header reveal" style="text-align:center;">
+            <span class="section-tag"><i class="fas fa-bolt"></i> Features</span>
+            <h2 class="section-title">Why Choose SMS?</h2>
+            <p class="section-sub" style="margin:0 auto;">Everything you need to manage your institution efficiently</p>
+        </div>
+
+        <div class="features-grid-new">
+            <div class="feature-card-new reveal">
+                <div class="feat-photo">
+                    <img src="https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=600&q=80" alt="Student Management" />
+                </div>
+                <div class="feat-body">
+                    <div class="feat-title-new">Student Management</div>
+                    <div class="feat-desc-new">Complete student records with admission details, personal information, and comprehensive academic profiles.</div>
+                </div>
+            </div>
+            <div class="feature-card-new reveal">
+                <div class="feat-photo">
+                    <img src="https://images.unsplash.com/photo-1606761568499-6d2451b23c66?w=600&q=80" alt="Attendance Tracking" />
+                </div>
+                <div class="feat-body">
+                    <div class="feat-title-new">Attendance Tracking</div>
+                    <div class="feat-desc-new">Automated daily attendance management with real-time updates and detailed subject-wise reports.</div>
+                </div>
+            </div>
+            <div class="feature-card-new reveal">
+                <div class="feat-photo">
+                    <img src="https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=600&q=80" alt="Digital Marksheets" />
+                </div>
+                <div class="feat-body">
+                    <div class="feat-title-new">Digital Marksheets</div>
+                    <div class="feat-desc-new">Generate and manage digital marksheets with comprehensive grading and performance analytics.</div>
+                </div>
+            </div>
+            <div class="feature-card-new reveal">
+                <div class="feat-photo">
+                    <img src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=600&q=80" alt="Teacher Management" />
+                </div>
+                <div class="feat-body">
+                    <div class="feat-title-new">Teacher Management</div>
+                    <div class="feat-desc-new">Manage faculty records, assign subjects, and allow teachers to update academic data easily.</div>
+                </div>
+            </div>
+            <div class="feature-card-new reveal">
+                <div class="feat-photo">
+                    <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&q=80" alt="Search and Filter" />
+                </div>
+                <div class="feat-body">
+                    <div class="feat-title-new">Search &amp; Filter</div>
+                    <div class="feat-desc-new">Find any student instantly by name, ID, or course with real-time search and smart filters.</div>
+                </div>
+            </div>
+            <div class="feature-card-new reveal">
+                <div class="feat-photo">
+                    <img src="https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=600&q=80" alt="Enterprise Security" />
+                </div>
+                <div class="feat-body">
+                    <div class="feat-title-new">Enterprise Security</div>
+                    <div class="feat-desc-new">Role-based authentication ensuring only authorized users access relevant data and features.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modules sub-section -->
+        <div class="section-header reveal" style="text-align:center; margin-top:80px; margin-bottom:40px;">
+            <span class="section-tag"><i class="fas fa-cubes"></i> System Modules</span>
+            <h2 class="section-title">8 Core Modules</h2>
+            <p class="section-sub" style="max-width:500px;margin:0 auto;">Each module handles a specific domain of academic administration.</p>
+        </div>
+
+        <div class="modules-grid">
+            <div class="module-card reveal">
+                <div class="module-num">01</div>
+                <div class="module-icon"><i class="fas fa-key"></i></div>
+                <div class="module-title">User Authentication</div>
+                <div class="module-desc">Registration, login, logout for Admin, Teacher, and Student roles.</div>
+            </div>
+            <div class="module-card reveal">
+                <div class="module-num">02</div>
+                <div class="module-icon"><i class="fas fa-user-cog"></i></div>
+                <div class="module-title">Admin Management</div>
+                <div class="module-desc">Full control — add, update, delete student and teacher records.</div>
+            </div>
+            <div class="module-card reveal">
+                <div class="module-num">03</div>
+                <div class="module-icon"><i class="fas fa-user-graduate"></i></div>
+                <div class="module-title">Student Management</div>
+                <div class="module-desc">Store and manage student details including course, email, and age.</div>
+            </div>
+            <div class="module-card reveal">
+                <div class="module-num">04</div>
+                <div class="module-icon"><i class="fas fa-chalkboard-teacher"></i></div>
+                <div class="module-title">Teacher Management</div>
+                <div class="module-desc">Manage faculty info and allow teachers to update academic data.</div>
+            </div>
+            <div class="module-card reveal">
+                <div class="module-num">05</div>
+                <div class="module-icon"><i class="fas fa-calendar-check"></i></div>
+                <div class="module-title">Attendance Management</div>
+                <div class="module-desc">Teachers mark and update student attendance by course and date.</div>
+            </div>
+            <div class="module-card reveal">
+                <div class="module-num">06</div>
+                <div class="module-icon"><i class="fas fa-award"></i></div>
+                <div class="module-title">Marks &amp; Results</div>
+                <div class="module-desc">Add and update subject marks; auto-calculate totals and grades.</div>
+            </div>
+            <div class="module-card reveal">
+                <div class="module-num">07</div>
+                <div class="module-icon"><i class="fas fa-search"></i></div>
+                <div class="module-title">Search &amp; Filter</div>
+                <div class="module-desc">Find students instantly by name, course, or ID with live search.</div>
+            </div>
+            <div class="module-card reveal">
+                <div class="module-num">08</div>
+                <div class="module-icon"><i class="fas fa-tachometer-alt"></i></div>
+                <div class="module-title">Dashboard</div>
+                <div class="module-desc">Admin overview of all students, teachers, and system activity.</div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ══════════════ CONTACT ══════════════ -->
+    <section id="contact">
+        <!-- ✅ Contact header + grid same level — no extra wrapper -->
+        <div class="contact-inner">
+            <div class="contact-left reveal">
+                <span class="section-tag" style="margin-bottom:14px;display:inline-block;"><i class="fas fa-envelope"></i> Contact</span>
+                <div class="about-who-header">
+                    <h3><i class="fas fa-envelope"></i> Get In Touch</h3>
+                </div>
+                <p class="section-sub" style="margin-bottom:28px;">Have questions about the SMS project? Reach out to the team.</p>
+
+                <div class="contact-info">
+                    <div class="contact-info-item">
+                        <div class="ci-icon"><i class="fas fa-university"></i></div>
+                        <div>
+                            <div class="ci-label">Institution</div>
+                            <div class="ci-val">School of IT, Indira University</div>
+                        </div>
+                    </div>
+                    <div class="contact-info-item">
+                        <div class="ci-icon"><i class="fas fa-map-marker-alt"></i></div>
+                        <div>
+                            <div class="ci-label">Location</div>
+                            <div class="ci-val">Pune, Maharashtra, India</div>
+                        </div>
+                    </div>
+                    <div class="contact-info-item">
+                        <div class="ci-icon"><i class="fas fa-graduation-cap"></i></div>
+                        <div>
+                            <div class="ci-label">Programme</div>
+                            <div class="ci-val">FY MCA · 2025–2026</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="contact-form-card reveal">
+                <h3>Send a Message</h3>
+                <p>Fill out the form and we'll get back to you soon.</p>
+                <div class="cf-row">
+                    <div class="cf-group">
+                        <label>First Name</label>
+                        <input type="text" placeholder="Your first name" />
+                    </div>
+                    <div class="cf-group">
+                        <label>Last Name</label>
+                        <input type="text" placeholder="Your last name" />
+                    </div>
+                </div>
+                <div class="cf-group">
+                    <label>Email Address</label>
+                    <input type="email" placeholder="you@example.com" />
+                </div>
+                <div class="cf-group">
+                    <label>Role</label>
+                    <select>
+                        <option value="">Select your role</option>
+                        <option>Student</option>
+                        <option>Teacher</option>
+                        <option>Administrator</option>
+                        <option>Other</option>
+                    </select>
+                </div>
+                <div class="cf-group">
+                    <label>Message</label>
+                    <textarea placeholder="Write your message here…"></textarea>
+                </div>
+                <button class="btn-submit" id="contact-submit-btn"><i class="fas fa-paper-plane"></i> Send Message</button>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ══════════════ FOOTER ══════════════ -->
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-brand">
+                <a class="logo footer-logo" href="#home">
+                    <div class="logo-icon"><i class="fas fa-graduation-cap"></i></div>
+                    <div class="logo-text">SM<span>S</span></div>
+                </a>
+                <p>Student Management System — a centralized digital platform for managing student records, attendance, and academic performance at Indira University's School of IT.</p>
+                <div class="footer-social">
+                    <a class="social-btn" href="https://github.com" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>
+                    <a class="social-btn" href="https://www.linkedin.com/in/pavan-salunke-0745633b4?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app" target="_blank" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                    <a class="social-btn" href="https://www.instagram.com/pavnn.04?igsh=MXNvZTgxa3cxaTh6Zw%3D%3D&utm_source=qr" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+            <div class="footer-col">
+                <h5>Navigation</h5>
+                <ul>
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#about">About Us</a></li>
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h5>System Modules</h5>
+                <ul>
+                    <li><a href="#features">Authentication</a></li>
+                    <li><a href="#features">Student Management</a></li>
+                    <li><a href="#features">Teacher Management</a></li>
+                    <li><a href="#features">Attendance</a></li>
+                    <li><a href="#features">Marks &amp; Results</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h5>Login Roles</h5>
+                <ul>
+                    <li><a href="#" class="footer-login-link" data-role="admin">Admin Login</a></li>
+                    <li><a href="#" class="footer-login-link" data-role="teacher">Teacher Login</a></li>
+                    <li><a href="#" class="footer-login-link" data-role="student">Student Login</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2025–2026 SMS · School of IT, Indira University. Made with <span class="heart">♥</span> by Pavan Salunke &amp; Chandrakant Bidve.</p>
+            <div class="footer-badge">v1.0.0 · FY MCA</div>
+        </div>
+    </footer>
+
+
+    <!-- ══════════════ LOGIN MODAL ══════════════ -->
+    <div class="login-overlay" id="login-overlay">
+        <div class="login-modal">
+            <button class="login-modal-close" id="login-close-btn"><i class="fas fa-times"></i></button>
+            <div class="lm-header">
+                <div class="lm-icon"><i class="fas fa-graduation-cap"></i></div>
+                <h3>Welcome Back</h3>
+                <p>Sign in to your SMS dashboard</p>
+            </div>
+            <div class="role-tabs-modal">
+                <button class="rtab active" data-role="admin">Admin</button>
+                <button class="rtab" data-role="teacher">Teacher</button>
+                <button class="rtab" data-role="student">Student</button>
+            </div>
+            <div class="lm-hint" id="lm-hint">Demo: admin / admin123</div>
+            <div class="lm-group">
+                <i class="fas fa-user"></i>
+                <input type="text" id="lm-user" placeholder="Username" />
+            </div>
+            <div class="lm-group">
+                <i class="fas fa-lock"></i>
+                <input type="password" id="lm-pass" placeholder="Password" />
+            </div>
+            <div class="lm-error" id="lm-error"></div>
+            <button class="btn-lm-submit" id="lm-submit-btn"><i class="fas fa-sign-in-alt"></i> Sign In</button>
+        </div>
+    </div>
+
+    <button class="scroll-top" id="scroll-top-btn"><i class="fas fa-arrow-up"></i></button>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+</body>
+</html>

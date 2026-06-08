@@ -1,0 +1,321 @@
+﻿@page
+@model StudentManagementSystem.Pages.Admin.DashboardModel
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard — SMS Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@400;500;600;700&family=Cabinet+Grotesk:wght@300;400;500;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <style>
+        :root{--ink:#0d0f14;--ink2:#1c2030;--surface:#f5f4f0;--white:#fff;--accent:#2563eb;--accent2:#0ea5e9;--muted:#64748b;--border:rgba(13,15,20,0.1);--grad:linear-gradient(135deg,#2563eb,#0ea5e9);--font-display:'Clash Display',sans-serif;--font-body:'Cabinet Grotesk',sans-serif;--font-mono:'DM Mono',monospace;}
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+        body{font-family:var(--font-body);background:var(--surface);color:var(--ink);}
+
+        /* ── Sidebar ── */
+        .sidebar{position:fixed;left:0;top:0;bottom:0;width:240px;background:var(--ink2);display:flex;flex-direction:column;padding:28px 0;z-index:100;}
+        .sb-logo{display:flex;align-items:center;gap:10px;padding:0 24px 28px;border-bottom:1px solid rgba(255,255,255,0.08);}
+        .sb-logo-icon{width:36px;height:36px;border-radius:10px;background:var(--grad);display:grid;place-items:center;color:#fff;font-size:16px;}
+        .sb-logo-text{font-family:var(--font-display);font-size:1.2rem;font-weight:700;color:#fff;}.sb-logo-text span{color:var(--accent2);}
+        .sb-role-badge{margin:16px 24px 0;background:rgba(37,99,235,0.2);border:1px solid rgba(37,99,235,0.3);border-radius:8px;padding:6px 12px;font-size:0.75rem;font-weight:600;color:var(--accent2);font-family:var(--font-mono);text-align:center;}
+        .sb-nav{margin-top:28px;flex:1;}.sb-label{padding:0 24px 8px;font-size:0.65rem;font-weight:600;color:rgba(255,255,255,0.25);text-transform:uppercase;letter-spacing:1.5px;}
+        .sb-link{display:flex;align-items:center;gap:12px;padding:11px 24px;color:rgba(255,255,255,0.55);text-decoration:none;font-size:0.9rem;font-weight:500;transition:all 0.2s;border-left:3px solid transparent;}
+        .sb-link:hover,.sb-link.active{color:#fff;background:rgba(255,255,255,0.06);border-left-color:var(--accent2);}.sb-link i{width:18px;text-align:center;}
+        .sb-bottom{padding:20px 24px;border-top:1px solid rgba(255,255,255,0.08);}
+        .sb-user{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+        .sb-avatar{width:36px;height:36px;border-radius:50%;background:var(--grad);display:grid;place-items:center;color:#fff;font-family:var(--font-display);font-size:0.9rem;font-weight:700;}
+        .sb-user-name{font-size:0.85rem;font-weight:600;color:#fff;}.sb-user-role{font-size:0.72rem;color:rgba(255,255,255,0.4);}
+        .btn-logout{width:100%;padding:9px;border:1px solid rgba(255,255,255,0.12);border-radius:8px;background:transparent;color:rgba(255,255,255,0.5);font-family:var(--font-body);font-size:0.85rem;font-weight:600;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:center;gap:8px;}
+        .btn-logout:hover{background:rgba(244,63,94,0.15);color:#f43f5e;border-color:rgba(244,63,94,0.3);}
+
+        /* ── Main ── */
+        .main{margin-left:240px;padding:36px 40px;min-height:100vh;}
+        .page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:32px;}
+        .page-header h1{font-family:var(--font-display);font-size:1.8rem;font-weight:700;}
+        .page-header p{color:var(--muted);margin-top:4px;}
+        .date-badge{font-family:var(--font-mono);font-size:0.8rem;color:var(--muted);background:var(--white);border:1px solid var(--border);padding:8px 16px;border-radius:10px;}
+
+        /* ── Stat Cards ── */
+        .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-bottom:28px;}
+        .stat-card{background:var(--white);border:1px solid var(--border);border-radius:16px;padding:24px;display:flex;flex-direction:column;gap:14px;transition:transform 0.2s,box-shadow 0.2s;cursor:pointer;text-decoration:none;color:inherit;}
+        .stat-card:hover{transform:translateY(-3px);box-shadow:0 12px 40px rgba(13,15,20,0.08);}
+        .stat-icon{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;font-size:1.1rem;}
+        .stat-icon.blue{background:#eff6ff;color:#2563eb;}
+        .stat-icon.purple{background:#f5f3ff;color:#7c3aed;}
+        .stat-icon.green{background:#f0fdf4;color:#16a34a;}
+        .stat-icon.orange{background:#fff7ed;color:#ea580c;}
+        .stat-val{font-family:var(--font-display);font-size:2rem;font-weight:700;line-height:1;}
+        .stat-lbl{font-size:0.82rem;color:var(--muted);font-weight:500;}
+        .stat-trend{font-size:0.75rem;font-weight:600;display:flex;align-items:center;gap:4px;}
+        .stat-trend.up{color:#16a34a;}.stat-trend.down{color:#dc2626;}
+
+        /* ── Two-col layout ── */
+        .row2{display:grid;grid-template-columns:1.4fr 1fr;gap:18px;margin-bottom:18px;}
+
+        /* ── Card ── */
+        .card{background:var(--white);border:1px solid var(--border);border-radius:16px;padding:24px;}
+        .card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
+        .card-title{font-family:var(--font-display);font-size:1rem;font-weight:600;}
+        .btn-link{font-size:0.82rem;color:var(--accent);font-weight:600;text-decoration:none;}
+        .btn-link:hover{text-decoration:underline;}
+
+        /* ── Table ── */
+        table{width:100%;border-collapse:collapse;}
+        th{font-size:0.7rem;color:var(--muted);text-align:left;padding:9px 12px;text-transform:uppercase;letter-spacing:0.5px;border-bottom:1px solid var(--border);}
+        td{font-size:0.85rem;padding:12px 12px;border-bottom:1px solid var(--border);}
+        tr:last-child td{border-bottom:none;}tr:hover td{background:#f8faff;}
+        .pill{display:inline-block;padding:3px 10px;border-radius:100px;font-size:0.7rem;font-weight:600;}
+        .pill.active{background:#dcfce7;color:#16a34a;}
+        .pill.inactive{background:#fee2e2;color:#dc2626;}
+
+        /* ── Quick actions ── */
+        .quick-actions{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+        .qa-btn{display:flex;align-items:center;gap:12px;padding:14px 16px;border:1.5px solid var(--border);border-radius:12px;background:var(--surface);text-decoration:none;color:var(--ink);font-size:0.88rem;font-weight:600;transition:all 0.2s;cursor:pointer;}
+        .qa-btn:hover{border-color:var(--accent);background:#eff6ff;color:var(--accent);}
+        .qa-icon{width:34px;height:34px;border-radius:9px;display:grid;place-items:center;font-size:0.9rem;flex-shrink:0;}
+        .qa-icon.blue{background:#eff6ff;color:#2563eb;}
+        .qa-icon.green{background:#f0fdf4;color:#16a34a;}
+        .qa-icon.purple{background:#f5f3ff;color:#7c3aed;}
+        .qa-icon.orange{background:#fff7ed;color:#ea580c;}
+
+        /* ── Activity feed ── */
+        .activity-list{display:flex;flex-direction:column;gap:14px;}
+        .activity-item{display:flex;align-items:flex-start;gap:12px;}
+        .act-dot{width:8px;height:8px;border-radius:50%;margin-top:6px;flex-shrink:0;}
+        .act-dot.blue{background:#2563eb;}.act-dot.green{background:#16a34a;}.act-dot.orange{background:#ea580c;}.act-dot.purple{background:#7c3aed;}
+        .act-text{font-size:0.85rem;line-height:1.4;}
+        .act-time{font-size:0.75rem;color:var(--muted);margin-top:2px;font-family:var(--font-mono);}
+
+        /* ── Attendance bar ── */
+        .att-row{display:flex;align-items:center;gap:12px;margin-bottom:14px;}
+        .att-label{font-size:0.82rem;font-weight:600;width:90px;flex-shrink:0;}
+        .att-bar-wrap{flex:1;height:8px;background:#f1f5f9;border-radius:100px;overflow:hidden;}
+        .att-bar{height:100%;border-radius:100px;background:var(--grad);}
+        .att-pct{font-size:0.78rem;font-family:var(--font-mono);color:var(--muted);width:38px;text-align:right;}
+    </style>
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="sb-logo">
+            <div class="sb-logo-icon"><i class="fas fa-graduation-cap"></i></div>
+            <div class="sb-logo-text">SM<span>S</span></div>
+        </div>
+        <div class="sb-role-badge"><i class="fas fa-shield-alt"></i> &nbsp;ADMIN</div>
+        <nav class="sb-nav">
+            <div class="sb-label">Main Menu</div>
+            <a href="/Admin/Dashboard" class="sb-link active"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+            <a href="/Admin/Students"  class="sb-link"><i class="fas fa-user-graduate"></i> Students</a>
+            <a href="/Admin/Teachers"  class="sb-link"><i class="fas fa-chalkboard-teacher"></i> Teachers</a>
+            <a href="/Admin/Attendance" class="sb-link"><i class="fas fa-calendar-check"></i> Attendance</a>
+            <a href="/Admin/Marks"     class="sb-link"><i class="fas fa-chart-line"></i> Marks & Results</a>
+        </nav>
+        <div class="sb-bottom">
+            <div class="sb-user">
+                <div class="sb-avatar" id="sb-avatar">AD</div>
+                <div><div class="sb-user-name" id="sb-username">Admin</div><div class="sb-user-role">Administrator</div></div>
+            </div>
+            <button class="btn-logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+        </div>
+    </aside>
+
+    <main class="main">
+        <!-- Header -->
+        <div class="page-header">
+            <div>
+                <h1>Dashboard</h1>
+                <p>Welcome back! Here's what's happening today.</p>
+            </div>
+            <div class="date-badge" id="todayDate"></div>
+        </div>
+
+        <!-- Stat Cards -->
+        <div class="stats-grid">
+            <a href="/Admin/Students" class="stat-card">
+                <div class="stat-icon blue"><i class="fas fa-user-graduate"></i></div>
+                <div>
+                    <div class="stat-val">@Model.TotalStudents</div>
+                    <div class="stat-lbl">Total Students</div>
+                </div>
+                <div class="stat-trend up"><i class="fas fa-arrow-up"></i> Active this semester</div>
+            </a>
+            <a href="/Admin/Teachers" class="stat-card">
+                <div class="stat-icon purple"><i class="fas fa-chalkboard-teacher"></i></div>
+                <div>
+                    <div class="stat-val">@Model.TotalTeachers</div>
+                    <div class="stat-lbl">Total Teachers</div>
+                </div>
+                <div class="stat-trend up"><i class="fas fa-arrow-up"></i> Faculty members</div>
+            </a>
+            <a href="/Admin/Attendance" class="stat-card">
+                <div class="stat-icon green"><i class="fas fa-calendar-check"></i></div>
+                <div>
+                    <div class="stat-val" id="presentCount">—</div>
+                    <div class="stat-lbl">Present Today</div>
+                </div>
+                <div class="stat-trend up"><i class="fas fa-circle" style="font-size:6px"></i> Live</div>
+            </a>
+            <a href="/Admin/Marks" class="stat-card">
+                <div class="stat-icon orange"><i class="fas fa-chart-line"></i></div>
+                <div>
+                    <div class="stat-val">87%</div>
+                    <div class="stat-lbl">Avg. Result</div>
+                </div>
+                <div class="stat-trend up"><i class="fas fa-arrow-up"></i> This semester</div>
+            </a>
+        </div>
+
+        <!-- Row 2: Recent Students + Quick Actions -->
+        <div class="row2">
+            <!-- Recent Students Table -->
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">Recent Students</span>
+                    <a href="/Admin/Students" class="btn-link">View all →</a>
+                </div>
+                <table>
+                    <thead>
+                        <tr><th>Roll</th><th>Name</th><th>Course</th><th>Status</th></tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var s in Model.RecentStudents)
+                        {
+                            <tr>
+                                <td style="font-family:var(--font-mono);font-size:0.78rem;">@s.RollNumber</td>
+                                <td><strong>@s.Name</strong></td>
+                                <td style="color:var(--muted);font-size:0.82rem;">Course @s.CourseId</td>
+                                <td><span class="pill active">Active</span></td>
+                            </tr>
+                        }
+                        @if (!Model.RecentStudents.Any())
+                        {
+                            <tr><td colspan="4" style="color:var(--muted);text-align:center;padding:24px;">No students added yet.</td></tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">Quick Actions</span>
+                </div>
+                <div class="quick-actions">
+                    <a href="/Admin/Students" class="qa-btn">
+                        <div class="qa-icon blue"><i class="fas fa-user-plus"></i></div>
+                        <span>Add Student</span>
+                    </a>
+                    <a href="/Admin/Teachers" class="qa-btn">
+                        <div class="qa-icon purple"><i class="fas fa-user-tie"></i></div>
+                        <span>Add Teacher</span>
+                    </a>
+                    <a href="/Admin/Attendance" class="qa-btn">
+                        <div class="qa-icon green"><i class="fas fa-calendar-check"></i></div>
+                        <span>Attendance</span>
+                    </a>
+                    <a href="/Admin/Marks" class="qa-btn">
+                        <div class="qa-icon orange"><i class="fas fa-chart-bar"></i></div>
+                        <span>Add Marks</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Row 3: Attendance Overview + Activity -->
+        <div class="row2">
+            <!-- Attendance by Course -->
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">Attendance by Course</span>
+                    <a href="/Admin/Attendance" class="btn-link">Details →</a>
+                </div>
+                <div class="att-row">
+                    <div class="att-label">FY MSC-CA</div>
+                    <div class="att-bar-wrap"><div class="att-bar" style="width:92%"></div></div>
+                    <div class="att-pct">92%</div>
+                </div>
+                <div class="att-row">
+                    <div class="att-label">BCA</div>
+                    <div class="att-bar-wrap"><div class="att-bar" style="width:85%"></div></div>
+                    <div class="att-pct">85%</div>
+                </div>
+                <div class="att-row">
+                    <div class="att-label">BSC-IT</div>
+                    <div class="att-bar-wrap"><div class="att-bar" style="width:78%"></div></div>
+                    <div class="att-pct">78%</div>
+                </div>
+                <div class="att-row" style="margin-bottom:0">
+                    <div class="att-label">SY MSC-CA</div>
+                    <div class="att-bar-wrap"><div class="att-bar" style="width:88%"></div></div>
+                    <div class="att-pct">88%</div>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">Recent Activity</span>
+                </div>
+                <div class="activity-list">
+                    <div class="activity-item">
+                        <div class="act-dot blue"></div>
+                        <div>
+                            <div class="act-text">Attendance marked for FY MSC-CA</div>
+                            <div class="act-time">Today, 09:30 AM</div>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="act-dot green"></div>
+                        <div>
+                            <div class="act-text">New student Pavan Salunke added</div>
+                            <div class="act-time">Today, 09:00 AM</div>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="act-dot orange"></div>
+                        <div>
+                            <div class="act-text">Marks updated for Data Structures</div>
+                            <div class="act-time">Yesterday, 04:15 PM</div>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="act-dot purple"></div>
+                        <div>
+                            <div class="act-text">Teacher Prof. Ramesh Kumar added</div>
+                            <div class="act-time">Yesterday, 02:00 PM</div>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="act-dot blue"></div>
+                        <div>
+                            <div class="act-text">Attendance marked for BCA</div>
+                            <div class="act-time">Yesterday, 10:00 AM</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Auth check
+        const role = sessionStorage.getItem('sms_role');
+        const user = sessionStorage.getItem('sms_user');
+        if (!role || !user) window.location.href = '/';
+        if (user) {
+            document.getElementById('sb-username').textContent = user;
+            document.getElementById('sb-avatar').textContent = user.substring(0, 2).toUpperCase();
+        }
+
+        function logout() { sessionStorage.clear(); window.location.href = '/'; }
+
+        // Today's date
+        const d = new Date();
+        document.getElementById('todayDate').textContent =
+            d.toLocaleDateString('en-IN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+
+        // Present count (from total students via Razor)
+        const total = @Model.TotalStudents;
+        document.getElementById('presentCount').textContent = total > 0 ? Math.round(total * 0.87) : '—';
+    </script>
+</body>
+</html>

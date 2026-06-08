@@ -1,0 +1,101 @@
+﻿@page
+@model StudentManagementSystem.Pages.Student.MarksModel
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Marks — SMS Student</title>
+    <link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@400;500;600;700&family=Cabinet+Grotesk:wght@300;400;500;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <style>
+        :root{--ink:#0d0f14;--ink2:#1c2030;--surface:#f5f4f0;--white:#fff;--accent:#7c3aed;--accent2:#a78bfa;--muted:#64748b;--border:rgba(13,15,20,0.1);--grad:linear-gradient(135deg,#7c3aed,#a78bfa);--font-display:'Clash Display',sans-serif;--font-body:'Cabinet Grotesk',sans-serif;--font-mono:'DM Mono',monospace;}
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+        body{font-family:var(--font-body);background:var(--surface);color:var(--ink);}
+        .sidebar{position:fixed;left:0;top:0;bottom:0;width:240px;background:var(--ink2);display:flex;flex-direction:column;padding:28px 0;z-index:100;}
+        .sb-logo{display:flex;align-items:center;gap:10px;padding:0 24px 28px;border-bottom:1px solid rgba(255,255,255,0.08);}
+        .sb-logo-icon{width:36px;height:36px;border-radius:10px;background:var(--grad);display:grid;place-items:center;color:#fff;font-size:16px;}
+        .sb-logo-text{font-family:var(--font-display);font-size:1.2rem;font-weight:700;color:#fff;} .sb-logo-text span{color:var(--accent2);}
+        .sb-role-badge{margin:16px 24px 0;background:rgba(124,58,237,0.2);border:1px solid rgba(124,58,237,0.3);border-radius:8px;padding:6px 12px;font-size:0.75rem;font-weight:600;color:var(--accent2);font-family:var(--font-mono);text-align:center;}
+        .sb-nav{margin-top:28px;flex:1;} .sb-label{padding:0 24px 8px;font-size:0.65rem;font-weight:600;color:rgba(255,255,255,0.25);text-transform:uppercase;letter-spacing:1.5px;}
+        .sb-link{display:flex;align-items:center;gap:12px;padding:11px 24px;color:rgba(255,255,255,0.55);text-decoration:none;font-size:0.9rem;font-weight:500;transition:all 0.2s;border-left:3px solid transparent;}
+        .sb-link:hover,.sb-link.active{color:#fff;background:rgba(255,255,255,0.06);border-left-color:var(--accent2);} .sb-link i{width:18px;text-align:center;}
+        .sb-bottom{padding:20px 24px;border-top:1px solid rgba(255,255,255,0.08);}
+        .sb-user{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+        .sb-avatar{width:36px;height:36px;border-radius:50%;background:var(--grad);display:grid;place-items:center;color:#fff;font-family:var(--font-display);font-size:0.9rem;font-weight:700;}
+        .sb-user-name{font-size:0.85rem;font-weight:600;color:#fff;} .sb-user-role{font-size:0.72rem;color:rgba(255,255,255,0.4);}
+        .btn-logout{width:100%;padding:9px;border:1px solid rgba(255,255,255,0.12);border-radius:8px;background:transparent;color:rgba(255,255,255,0.5);font-family:var(--font-body);font-size:0.85rem;font-weight:600;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:center;gap:8px;}
+        .btn-logout:hover{background:rgba(244,63,94,0.15);color:#f43f5e;border-color:rgba(244,63,94,0.3);}
+        .main{margin-left:240px;padding:36px 40px;min-height:100vh;}
+        .page-header{margin-bottom:32px;} .page-header h1{font-family:var(--font-display);font-size:1.8rem;font-weight:700;} .page-header p{color:var(--muted);margin-top:4px;}
+        .result-banner{background:var(--ink2);border-radius:20px;padding:32px;margin-bottom:28px;display:flex;align-items:center;gap:32px;position:relative;overflow:hidden;}
+        .result-banner::before{content:'';position:absolute;right:-40px;top:-40px;width:180px;height:180px;border-radius:50%;background:var(--grad);opacity:0.12;}
+        .result-grade{font-family:var(--font-display);font-size:4rem;font-weight:700;color:#fff;line-height:1;}
+        .result-info h3{font-family:var(--font-display);font-size:1.2rem;font-weight:700;color:#fff;margin-bottom:6px;}
+        .result-info p{color:rgba(255,255,255,0.5);font-size:0.875rem;}
+        .result-stats{display:flex;gap:28px;margin-top:14px;}
+        .result-stat-val{font-family:var(--font-display);font-size:1.3rem;font-weight:700;color:#fff;}
+        .result-stat-lbl{font-size:0.75rem;color:rgba(255,255,255,0.4);margin-top:2px;}
+        .card{background:var(--white);border:1px solid var(--border);border-radius:16px;padding:28px;}
+        .card-title{font-family:var(--font-display);font-size:1.1rem;font-weight:600;margin-bottom:20px;}
+        table{width:100%;border-collapse:collapse;}
+        th{font-size:0.72rem;color:var(--muted);text-align:left;padding:10px 14px;text-transform:uppercase;letter-spacing:0.5px;border-bottom:1px solid var(--border);}
+        td{font-size:0.875rem;padding:13px 14px;border-bottom:1px solid var(--border);}
+        tr:last-child td{border-bottom:none;}
+        .grade-Ap,.grade-A{color:#16a34a;font-weight:700;} .grade-B{color:#2563eb;font-weight:700;} .grade-C{color:#d97706;font-weight:700;}
+        .bar-wrap{background:var(--surface);border-radius:100px;height:6px;overflow:hidden;width:100px;display:inline-block;vertical-align:middle;margin-left:8px;}
+        .bar{height:100%;border-radius:100px;background:var(--grad);}
+    </style>
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="sb-logo"><div class="sb-logo-icon"><i class="fas fa-graduation-cap"></i></div><div class="sb-logo-text">SM<span>S</span></div></div>
+        <div class="sb-role-badge"><i class="fas fa-user-graduate"></i> &nbsp;STUDENT</div>
+        <nav class="sb-nav">
+            <div class="sb-label">Menu</div>
+            <a href="/Student/Dashboard" class="sb-link"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+            <a href="/Student/Attendance" class="sb-link"><i class="fas fa-calendar-check"></i> My Attendance</a>
+            <a href="/Student/Marks" class="sb-link active"><i class="fas fa-chart-line"></i> My Marks</a>
+            <a href="/Student/Profile" class="sb-link"><i class="fas fa-user"></i> My Profile</a>
+        </nav>
+        <div class="sb-bottom">
+            <div class="sb-user"><div class="sb-avatar" id="sb-avatar">ST</div><div><div class="sb-user-name" id="sb-username">Student</div><div class="sb-user-role">FY MSC-CA</div></div></div>
+            <button class="btn-logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+        </div>
+    </aside>
+    <main class="main">
+        <div class="page-header"><h1>My Marks</h1><p>Your academic results and subject-wise performance</p></div>
+        <div class="result-banner">
+            <div class="result-grade">A</div>
+            <div class="result-info">
+                <h3>Overall Result — FY MSC-CA</h3>
+                <p>Academic Year 2025–2026 · Indira University</p>
+                <div class="result-stats">
+                    <div><div class="result-stat-val">480</div><div class="result-stat-lbl">Total Marks</div></div>
+                    <div><div class="result-stat-val">600</div><div class="result-stat-lbl">Out of</div></div>
+                    <div><div class="result-stat-val">80%</div><div class="result-stat-lbl">Percentage</div></div>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-title">Subject-wise Marks</div>
+            <table>
+                <thead><tr><th>Subject</th><th>Marks</th><th>Total</th><th>Percentage</th><th>Grade</th></tr></thead>
+                <tbody>
+                    <tr><td>Data Structures</td><td>78</td><td>100</td><td>78% <div class="bar-wrap"><div class="bar" style="width:78%"></div></div></td><td class="grade-A">A</td></tr>
+                    <tr><td>Web Technology</td><td>91</td><td>100</td><td>91% <div class="bar-wrap"><div class="bar" style="width:91%"></div></div></td><td class="grade-Ap">A+</td></tr>
+                    <tr><td>DBMS</td><td>65</td><td>100</td><td>65% <div class="bar-wrap"><div class="bar" style="width:65%"></div></div></td><td class="grade-B">B</td></tr>
+                    <tr><td>Computer Networks</td><td>72</td><td>100</td><td>72% <div class="bar-wrap"><div class="bar" style="width:72%"></div></div></td><td class="grade-A">A</td></tr>
+                    <tr><td>Operating Systems</td><td>69</td><td>100</td><td>69% <div class="bar-wrap"><div class="bar" style="width:69%"></div></div></td><td class="grade-B">B+</td></tr>
+                    <tr><td>Software Engineering</td><td>85</td><td>100</td><td>85% <div class="bar-wrap"><div class="bar" style="width:85%"></div></div></td><td class="grade-A">A</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+    <script>
+        const role = sessionStorage.getItem('sms_role'); const user = sessionStorage.getItem('sms_user');
+        if (!role || !user) window.location.href = '/';
+        if (user) { document.getElementById('sb-username').textContent = user; document.getElementById('sb-avatar').textContent = user.substring(0,2).toUpperCase(); }
+        function logout() { sessionStorage.clear(); window.location.href = '/'; }
+    </script>
+</body>
+</html>

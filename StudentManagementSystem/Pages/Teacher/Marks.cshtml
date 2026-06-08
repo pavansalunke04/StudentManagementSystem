@@ -1,0 +1,261 @@
+﻿@page
+@model StudentManagementSystem.Pages.Teacher.MarksModel
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Enter Marks — SMS Teacher</title>
+    <link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@400;500;600;700&family=Cabinet+Grotesk:wght@300;400;500;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <style>
+        :root{--ink:#0d0f14;--ink2:#1c2030;--surface:#f5f4f0;--white:#fff;--accent:#0d9488;--accent2:#14b8a6;--muted:#64748b;--border:rgba(13,15,20,0.1);--grad:linear-gradient(135deg,#0d9488,#14b8a6);--font-display:'Clash Display',sans-serif;--font-body:'Cabinet Grotesk',sans-serif;--font-mono:'DM Mono',monospace;}
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+        body{font-family:var(--font-body);background:var(--surface);color:var(--ink);}
+        .sidebar{position:fixed;left:0;top:0;bottom:0;width:240px;background:var(--ink2);display:flex;flex-direction:column;padding:28px 0;z-index:100;}
+        .sb-logo{display:flex;align-items:center;gap:10px;padding:0 24px 28px;border-bottom:1px solid rgba(255,255,255,0.08);}
+        .sb-logo-icon{width:36px;height:36px;border-radius:10px;background:var(--grad);display:grid;place-items:center;color:#fff;font-size:16px;}
+        .sb-logo-text{font-family:var(--font-display);font-size:1.2rem;font-weight:700;color:#fff;} .sb-logo-text span{color:var(--accent2);}
+        .sb-role-badge{margin:16px 24px 0;background:rgba(13,148,136,0.2);border:1px solid rgba(13,148,136,0.3);border-radius:8px;padding:6px 12px;font-size:0.75rem;font-weight:600;color:var(--accent2);font-family:var(--font-mono);text-align:center;}
+        .sb-nav{margin-top:28px;flex:1;} .sb-label{padding:0 24px 8px;font-size:0.65rem;font-weight:600;color:rgba(255,255,255,0.25);text-transform:uppercase;letter-spacing:1.5px;}
+        .sb-link{display:flex;align-items:center;gap:12px;padding:11px 24px;color:rgba(255,255,255,0.55);text-decoration:none;font-size:0.9rem;font-weight:500;transition:all 0.2s;border-left:3px solid transparent;}
+        .sb-link:hover,.sb-link.active{color:#fff;background:rgba(255,255,255,0.06);border-left-color:var(--accent2);} .sb-link i{width:18px;text-align:center;}
+        .sb-bottom{padding:20px 24px;border-top:1px solid rgba(255,255,255,0.08);}
+        .sb-user{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+        .sb-avatar{width:36px;height:36px;border-radius:50%;background:var(--grad);display:grid;place-items:center;color:#fff;font-family:var(--font-display);font-size:0.9rem;font-weight:700;}
+        .sb-user-name{font-size:0.85rem;font-weight:600;color:#fff;} .sb-user-role{font-size:0.72rem;color:rgba(255,255,255,0.4);}
+        .btn-logout{width:100%;padding:9px;border:1px solid rgba(255,255,255,0.12);border-radius:8px;background:transparent;color:rgba(255,255,255,0.5);font-family:var(--font-body);font-size:0.85rem;font-weight:600;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:center;gap:8px;}
+        .btn-logout:hover{background:rgba(244,63,94,0.15);color:#f43f5e;border-color:rgba(244,63,94,0.3);}
+        .main{margin-left:240px;padding:36px 40px;min-height:100vh;}
+        .page-header{margin-bottom:32px;} .page-header h1{font-family:var(--font-display);font-size:1.8rem;font-weight:700;} .page-header p{color:var(--muted);margin-top:4px;}
+        .filters{display:flex;gap:14px;margin-bottom:24px;}
+        .filter-group label{display:block;font-size:0.8rem;font-weight:600;margin-bottom:6px;color:var(--muted);}
+        .filter-group select{padding:10px 14px;border:1.5px solid var(--border);border-radius:10px;font-family:var(--font-body);font-size:0.9rem;background:var(--white);outline:none;}
+        .card{background:var(--white);border:1px solid var(--border);border-radius:16px;padding:28px;margin-bottom:24px;}
+        .card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
+        .card-title{font-family:var(--font-display);font-size:1.1rem;font-weight:600;}
+        table{width:100%;border-collapse:collapse;}
+        th{font-size:0.72rem;color:var(--muted);text-align:left;padding:10px 14px;text-transform:uppercase;letter-spacing:0.5px;border-bottom:1px solid var(--border);}
+        td{font-size:0.875rem;padding:10px 14px;border-bottom:1px solid var(--border);}
+        tr:last-child td{border-bottom:none;}
+        .marks-input{width:80px;padding:8px 10px;border:1.5px solid var(--border);border-radius:8px;font-family:var(--font-body);font-size:0.9rem;text-align:center;outline:none;transition:border 0.2s;}
+        .marks-input:focus{border-color:var(--accent);}
+        .grade-cell{font-weight:700;font-size:0.9rem;}
+        .grade-Ap,.grade-A{color:#16a34a;} .grade-B{color:#2563eb;} .grade-C{color:#d97706;} .grade-F{color:#dc2626;}
+        .btn-save-all{padding:11px 28px;background:var(--grad);border:none;border-radius:10px;color:#fff;font-family:var(--font-body);font-size:0.9rem;font-weight:700;cursor:pointer;}
+        .success-msg{display:none;background:#ccfbf1;color:#0d9488;padding:12px 20px;border-radius:10px;margin-bottom:20px;font-weight:600;}
+        .error-msg{display:none;background:#fee2e2;color:#dc2626;padding:12px 20px;border-radius:10px;margin-bottom:20px;font-weight:600;}
+        .no-students{text-align:center;color:var(--muted);padding:30px;font-size:0.95rem;}
+    </style>
+</head>
+<body>
+
+@Html.AntiForgeryToken()
+
+@* ✅ Saare students CourseId ke saath JS ko pass karo *@
+<script>
+    const allStudents = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(
+        Model.Students.Select(s => new {
+            id         = s.Id,
+            name       = s.Name,
+            rollNumber = s.RollNumber,
+            courseId   = s.CourseId
+        })
+    ));
+
+    const courseOptions = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(
+        Model.Courses != null && Model.Courses.Any()
+            ? Model.Courses.Select(c => new { id = c.Id, name = c.Name }).ToList()
+            : new[] {
+                new { id = 1, name = "FY MSC-CA" },
+                new { id = 2, name = "BCA" }
+              }.ToList()
+    ));
+</script>
+
+<aside class="sidebar">
+    <div class="sb-logo"><div class="sb-logo-icon"><i class="fas fa-graduation-cap"></i></div><div class="sb-logo-text">SM<span>S</span></div></div>
+    <div class="sb-role-badge"><i class="fas fa-chalkboard-teacher"></i> &nbsp;TEACHER</div>
+    <nav class="sb-nav">
+        <div class="sb-label">Menu</div>
+        <a href="/Teacher/Dashboard" class="sb-link"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+        <a href="/Teacher/Students" class="sb-link"><i class="fas fa-user-graduate"></i> My Students</a>
+        <a href="/Teacher/Attendance" class="sb-link"><i class="fas fa-calendar-check"></i> Attendance</a>
+        <a href="/Teacher/Marks" class="sb-link active"><i class="fas fa-chart-line"></i> Marks</a>
+        <a href="/Teacher/Profile" class="sb-link"><i class="fas fa-user"></i> My Profile</a>
+    </nav>
+    <div class="sb-bottom">
+        <div class="sb-user"><div class="sb-avatar" id="sb-avatar">TC</div><div><div class="sb-user-name" id="sb-username">Teacher</div><div class="sb-user-role">Faculty</div></div></div>
+        <button class="btn-logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+    </div>
+</aside>
+
+<main class="main">
+    <div class="page-header"><h1>Enter Marks</h1><p>Add or update student subject marks</p></div>
+
+    <div class="filters">
+        <div class="filter-group">
+            <label>Subject</label>
+            <select id="f-subject" onchange="updateTitle()">
+                @if (Model.Subjects != null && Model.Subjects.Any())
+                {
+                    @foreach (var s in Model.Subjects)
+                    {
+                        <option value="@s.Id">@s.Name</option>
+                    }
+                }
+                else
+                {
+                    <option value="1">Data Structures</option>
+                    <option value="2">Web Technology</option>
+                    <option value="3">DBMS</option>
+                    <option value="4">Computer Networks</option>
+                }
+            </select>
+        </div>
+        <div class="filter-group">
+            <label>Course</label>
+            <select id="f-course" onchange="filterByCourse()">
+                @if (Model.Courses != null && Model.Courses.Any())
+                {
+                    @foreach (var c in Model.Courses)
+                    {
+                        <option value="@c.Id">@c.Name</option>
+                    }
+                }
+                else
+                {
+                    <option value="1">FY MSC-CA</option>
+                    <option value="2">BCA</option>
+                }
+            </select>
+        </div>
+    </div>
+
+    <div class="success-msg" id="successMsg"><i class="fas fa-check-circle"></i> Marks saved successfully!</div>
+    <div class="error-msg"   id="errorMsg"><i class="fas fa-times-circle"></i> Error saving marks. Please try again.</div>
+
+    <div class="card">
+        <div class="card-header">
+            <span class="card-title" id="tableTitle">Enter Marks</span>
+            <button class="btn-save-all" onclick="saveAll()"><i class="fas fa-save"></i> Save All Marks</button>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Roll No.</th>
+                    <th>Student Name</th>
+                    <th>Marks (out of 100)</th>
+                    <th>Grade</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody"></tbody>
+        </table>
+    </div>
+</main>
+
+<script>
+    const role = sessionStorage.getItem('sms_role');
+    const user = sessionStorage.getItem('sms_user');
+    if (!role || !user) window.location.href = '/';
+    if (user) {
+        document.getElementById('sb-username').textContent = user;
+        document.getElementById('sb-avatar').textContent = user.substring(0,2).toUpperCase();
+    }
+    function logout() { sessionStorage.clear(); window.location.href = '/'; }
+
+    const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+
+    // ✅ Course filter — sirf selected course ke students dikhao
+    function filterByCourse() {
+        const courseId = parseInt(document.getElementById('f-course').value);
+
+        // ✅ FIX: courseId 0 ya NaN ho toh saare students dikhao (fallback)
+        const filtered = isNaN(courseId) || courseId === 0
+            ? allStudents
+            : allStudents.filter(s => s.courseId === courseId);
+
+        renderTable(filtered);
+    }
+
+    function renderTable(students) {
+        const tbody = document.getElementById('tableBody');
+        if (!students || !students.length) {
+            tbody.innerHTML = `<tr><td colspan="4" class="no-students">Is course mein koi student nahi mila.</td></tr>`;
+            return;
+        }
+        tbody.innerHTML = students.map(s => `
+            <tr data-student-id="${s.id}">
+                <td>${s.rollNumber ?? '-'}</td>
+                <td>${s.name}</td>
+                <td><input class="marks-input" type="number" min="0" max="100"
+                    placeholder="0-100" oninput="updateGrade(this)" /></td>
+                <td class="grade-cell">-</td>
+            </tr>
+        `).join('');
+    }
+
+    function updateTitle() {
+        const sel  = document.getElementById('f-subject');
+        const name = sel.options[sel.selectedIndex]?.text ?? '';
+        document.getElementById('tableTitle').textContent = 'Enter Marks — ' + name;
+    }
+
+    function updateGrade(input) {
+        const m = parseInt(input.value);
+        const gradeCell = input.closest('tr').querySelector('.grade-cell');
+        if (isNaN(m) || input.value === '') {
+            gradeCell.textContent = '-'; gradeCell.className = 'grade-cell'; return;
+        }
+        let g, cls;
+        if      (m >= 90) { g='A+'; cls='grade-Ap'; }
+        else if (m >= 80) { g='A';  cls='grade-A';  }
+        else if (m >= 70) { g='B+'; cls='grade-B';  }
+        else if (m >= 60) { g='B';  cls='grade-B';  }
+        else if (m >= 50) { g='C';  cls='grade-C';  }
+        else               { g='F';  cls='grade-F';  }
+        gradeCell.textContent = g;
+        gradeCell.className   = 'grade-cell ' + cls;
+    }
+
+    async function saveAll() {
+        const subjectId = parseInt(document.getElementById('f-subject').value);
+        const rows      = document.querySelectorAll('#tableBody tr[data-student-id]');
+        const payload   = [];
+
+        rows.forEach(row => {
+            const studentId = parseInt(row.dataset.studentId);
+            const input     = row.querySelector('.marks-input');
+            const val       = parseInt(input.value);
+            const grade     = row.querySelector('.grade-cell').textContent.trim();
+            if (!input.value || isNaN(val)) return;
+            payload.push({ studentId, subjectId, marksObtained: val, grade, examType: 'Regular' });
+        });
+
+        if (!payload.length) { alert('Koi bhi marks nahi bhare!'); return; }
+
+        const res = await fetch('?handler=SaveMarks', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'RequestVerificationToken': token
+            },
+            body: JSON.stringify({ marks: payload })
+        });
+
+        if (res.ok) {
+            document.getElementById('successMsg').style.display = 'block';
+            document.getElementById('errorMsg').style.display   = 'none';
+            setTimeout(() => document.getElementById('successMsg').style.display = 'none', 3000);
+        } else {
+            document.getElementById('errorMsg').style.display   = 'block';
+            document.getElementById('successMsg').style.display = 'none';
+            console.error('Save failed:', await res.text());
+        }
+    }
+
+    // ✅ Page load par immediately render karo
+    filterByCourse();
+    updateTitle();  
+</script>
+</body>
+</html>
